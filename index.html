@@ -318,6 +318,7 @@ button{font-family:inherit;}
   width:100%;min-height:140px;font-family:"SF Mono",Consolas,monospace;font-size:12px;border-radius:var(--radius-sm);
   border:1px solid var(--gray-line);padding:14px;background:#0f172a;color:#a5d6ff;resize:vertical;
 }
+.config-box textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(27,154,170,.18);}
 .empty-state{text-align:center;padding:60px 20px;color:var(--text-muted);}
 .empty-state .ic{font-size:38px;margin-bottom:10px;}
 
@@ -623,7 +624,7 @@ function bindCrumbs(container){
 ===================================================================================================== */
 function renderHome(){
   const cards = [
-    {ic:ICONS.docs, title:"Documentos da Equipe", desc:"Pastas individuais com documentação de cada integrante da equipe elétrica.", route:"documentos"},
+    {ic:ICONS.docs, title:"Documentos da Equipe", desc:"Pastas individuais com documentação de cada integrante da equipe elétrica.", route:"documentos", externalLink:"https://posidoniashipping.sharepoint.com/:f:/s/eletrica.offshore/IgD-EfupdnYJQ6b_Vk4AexFxAcjbSU4p1NMVyKpe_YabuA4?e=3wGleY"},
     {ic:ICONS.train, title:"Treinamentos Internos", desc:"Biblioteca de treinamentos técnicos: vídeos, manuais e apresentações.", route:"treinamentos"},
     {ic:ICONS.reports, title:"Relatórios", desc:"Formulários e relatórios de manutenção integrados ao Smartsheet.", route:"relatorios"},
     {ic:ICONS.trouble, title:"Troubleshooting", desc:"Base de conhecimento técnica por embarcação, equipamento e defeito.", route:"troubleshooting"},
@@ -640,7 +641,7 @@ function renderHome(){
     <p class="section-label">Acesso rápido</p>
     <div class="grid">
       ${cards.map(c=>`
-        <div class="card" data-route="${c.route}">
+        <div class="card" ${c.externalLink ? `data-external="${c.externalLink}"` : `data-route="${c.route}"`}>
           <div class="ic-wrap">${c.ic}</div>
           <h3>${c.title}</h3>
           <p>${c.desc}</p>
@@ -653,6 +654,9 @@ function renderHome(){
 function bindHome(){
   document.querySelectorAll('.card[data-route]').forEach(c=>{
     c.addEventListener('click', ()=> navigate(c.dataset.route));
+  });
+  document.querySelectorAll('.card[data-external]').forEach(c=>{
+    c.addEventListener('click', ()=> window.open(c.dataset.external, '_blank', 'noopener'));
   });
   const input = document.getElementById('searchInput');
   const resultsBox = document.getElementById('searchResults');
@@ -746,6 +750,7 @@ function renderDocumentos(){
   return `
     ${crumbHTML([{label:"Início",route:"home"},{label:"Documentos da Equipe"}])}
     ${pageHeader("EQUIPE", "Documentos da Equipe", "Acesse as pastas individuais de cada integrante.")}
+    <a class="btn-primary" href="https://posidoniashipping.sharepoint.com/:f:/s/eletrica.offshore/IgD-EfupdnYJQ6b_Vk4AexFxAcjbSU4p1NMVyKpe_YabuA4?e=3wGleY" target="_blank" rel="noopener" style="margin-bottom:26px">📂 Abrir Pasta Geral da Equipe (SharePoint)</a>
     <div class="team-grid">
       ${CONFIG.documentos.map(p=>`
         <div class="team-card">
@@ -950,35 +955,72 @@ function bindTroubleshooting(){
    PÁGINA: CONFIGURAÇÕES
 ===================================================================================================== */
 function renderConfig(){
+  const blocks = [
+    {key:"documentos", icon:"📁", desc:"Links de pastas individuais da equipe (Google Drive / OneDrive / SharePoint)."},
+    {key:"treinamentos", icon:"🎓", desc:"Links de pastas de treinamento por tema."},
+    {key:"relatorios", icon:"📋", desc:"Links de formulários Smartsheet."},
+    {key:"biblioteca", icon:"📚", desc:"Links de pastas por fabricante."},
+    {key:"troubleshooting", icon:"🛠", desc:"Estrutura completa de embarcações → equipamentos → defeitos → links de documentação."},
+  ];
   return `
     ${crumbHTML([{label:"Início",route:"home"},{label:"Configurações"}])}
-    ${pageHeader("ADMINISTRAÇÃO", "Configurações de Links", "Visualize a estrutura de configuração. Edite os valores diretamente no bloco CONFIG do arquivo HTML (início do &lt;script&gt;).")}
-    <div class="config-box">
-      <h3>📁 documentos</h3>
-      <p>Links de pastas individuais da equipe (Google Drive / OneDrive / SharePoint).</p>
-      <textarea readonly>${escapeHtml(JSON.stringify(CONFIG.documentos, null, 2))}</textarea>
+    ${pageHeader("ADMINISTRAÇÃO", "Configurações de Links", "Edite os valores abaixo e clique em \"Copiar\" para levar o trecho atualizado até o arquivo HTML (bloco CONFIG, no início do &lt;script&gt;).")}
+    <div class="config-box" style="background:var(--blue-soft);border-color:#cfe7eb;">
+      <h3 style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+        ⚠️ Importante
+        <button class="btn-primary" id="copyAllBtn" style="margin:0;padding:9px 18px;font-size:13px;">📋 Copiar tudo</button>
+      </h3>
+      <p style="margin:0;">Editar aqui <strong>não salva automaticamente no site</strong> (este é um arquivo estático, sem banco de dados). Depois de editar, copie o trecho e cole no arquivo <code>index.html</code> do GitHub, substituindo o bloco correspondente — e suba a alteração ("Commit changes").</p>
     </div>
-    <div class="config-box">
-      <h3>🎓 treinamentos</h3>
-      <p>Links de pastas de treinamento por tema.</p>
-      <textarea readonly>${escapeHtml(JSON.stringify(CONFIG.treinamentos, null, 2))}</textarea>
-    </div>
-    <div class="config-box">
-      <h3>📋 relatorios</h3>
-      <p>Links de formulários Smartsheet.</p>
-      <textarea readonly>${escapeHtml(JSON.stringify(CONFIG.relatorios, null, 2))}</textarea>
-    </div>
-    <div class="config-box">
-      <h3>📚 biblioteca</h3>
-      <p>Links de pastas por fabricante.</p>
-      <textarea readonly>${escapeHtml(JSON.stringify(CONFIG.biblioteca, null, 2))}</textarea>
-    </div>
-    <div class="config-box">
-      <h3>🛠 troubleshooting</h3>
-      <p>Estrutura completa de embarcações → equipamentos → defeitos → links de documentação.</p>
-      <textarea readonly>${escapeHtml(JSON.stringify(CONFIG.troubleshooting, null, 2))}</textarea>
-    </div>
+    ${blocks.map(b=>`
+      <div class="config-box">
+        <h3 style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+          <span>${b.icon} ${b.key}</span>
+          <button class="btn-primary copy-block-btn" data-key="${b.key}" style="margin:0;padding:8px 16px;font-size:12.5px;">📋 Copiar</button>
+        </h3>
+        <p>${b.desc}</p>
+        <textarea data-key="${b.key}" id="cfg-${b.key}">${escapeHtml(JSON.stringify(CONFIG[b.key], null, 2))}</textarea>
+      </div>`).join('')}
   `;
+}
+
+function bindConfig(){
+  document.querySelectorAll('.copy-block-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const key = btn.dataset.key;
+      const textarea = document.getElementById('cfg-'+key);
+      const text = `${key}: ${textarea.value},`;
+      copyToClipboard(text, btn);
+    });
+  });
+  const allBtn = document.getElementById('copyAllBtn');
+  if(allBtn){
+    allBtn.addEventListener('click', ()=>{
+      const parts = ['documentos','treinamentos','relatorios','biblioteca','troubleshooting'].map(key=>{
+        const textarea = document.getElementById('cfg-'+key);
+        return `  ${key}: ${textarea.value},`;
+      });
+      const text = `const CONFIG = {\n\n${parts.join('\n\n')}\n\n};`;
+      copyToClipboard(text, allBtn);
+    });
+  }
+}
+
+function copyToClipboard(text, btn){
+  const original = btn.innerHTML;
+  const done = ()=>{ btn.innerHTML = '✅ Copiado!'; setTimeout(()=>{ btn.innerHTML = original; }, 1800); };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(()=>fallbackCopy(text, done));
+  } else {
+    fallbackCopy(text, done);
+  }
+}
+function fallbackCopy(text, done){
+  const ta = document.createElement('textarea');
+  ta.value = text; document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); }catch(e){}
+  document.body.removeChild(ta);
+  done();
 }
 
 /* =====================================================================================================
@@ -1005,6 +1047,7 @@ function render(){
   bindCrumbs(content);
   if(state.route==='home') bindHome();
   if(['troubleshooting','ts-vessel','ts-equip','ts-fault'].includes(state.route)) bindTroubleshooting();
+  if(state.route==='config') bindConfig();
 }
 
 /* =====================================================================================================
