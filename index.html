@@ -307,6 +307,17 @@ button{font-family:inherit;}
 .fd-block h4{margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--blue);}
 .fd-block p, .fd-block li{font-size:13.5px;color:#334155;line-height:1.65;}
 .fd-block ul{margin:0;padding-left:18px;}
+.proc-list{margin:0;padding:0;list-style:none;counter-reset:proc;}
+.proc-list li{
+  counter-increment:proc;position:relative;padding:12px 14px 12px 46px;margin-bottom:8px;
+  background:var(--gray);border-radius:var(--radius-sm);border-left:3px solid var(--blue);
+  font-size:13.5px;color:#334155;line-height:1.6;
+}
+.proc-list li::before{
+  content:counter(proc);position:absolute;left:12px;top:12px;
+  width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;
+  font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center;
+}
 .fd-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
 @media (max-width:700px){.fd-grid{grid-template-columns:1fr;}}
 .tag-chip{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;background:var(--gray);color:#475569;padding:5px 11px;border-radius:99px;margin:0 6px 6px 0;}
@@ -468,7 +479,20 @@ const CONFIG = {
                   "EPI completo (tensão 440V)",
                   "Megômetro (se suspeita de isolamento)"
                 ],
-                procedimento:"1) Verificar tensão 440V desde o disjuntor principal até as contatoras K2 e K3, e conferir jumper na entrada de K1. 2) Verificar chaves seletoras no painel — devem estar na posição Normal. 3) Conferir fusíveis da Servo Pump (F2 16A). 4) Verificar relé térmico F5 (ampola pressionada para dentro). 5) Conferir tensão na contatora K5. 6) Verificar integridade das contactoras de potência e continuidade dos contatos. 7) Verificar fusíveis F3 10A e tensão no secundário do transformador de comando S4. 8) Verificar paradas de emergência no passadiço, CCM e Local. 9) Medir continuidade entre X1:40 e X1:7 para verificar intertravamentos. 10) Conferir relés temporizadores K17 e K18.",
+                procedimento:[
+                  "Verificar tensão 440V desde o disjuntor principal até as contatoras K2 e K3, e conferir o jumper na entrada de K1.",
+                  "Verificar as chaves seletoras no interior do painel — ambas devem estar na posição Normal.",
+                  "Conferir os fusíveis da Servo Pump (F2 16A) quanto à integridade e ao dimensionamento correto.",
+                  "Verificar se o relé térmico F5 está com a ampola acionada (pressionada para dentro).",
+                  "Conferir a presença de tensão na entrada da contatora K5.",
+                  "Desligar a alimentação principal e verificar a integridade e continuidade dos contatos das contactoras de potência do motor do Thruster e da Servo Pump.",
+                  "Inspecionar toda a borneira X2 em busca de cabos frouxos ou mal encaixados.",
+                  "Verificar os fusíveis F3 10A e a chave principal do transformador de comando S4, além da tensão e dos fusíveis do secundário.",
+                  "Verificar se há alguma parada de emergência remota pressionada no passadiço, CCM ou Local.",
+                  "Medir continuidade entre X1:40 e X1:7. Havendo continuidade, não há intertravamentos impedindo a partida.",
+                  "Verificar a pressão de trabalho da Servo Pump e o funcionamento dos relés temporizadores K17 (5s) e K18 (2s), incluindo a integridade dos contatos NA e NF.",
+                  "Persistindo a falha após todos os passos, acionar o Suporte Técnico da empresa."
+                ],
                 arquivos:["Check-list Bow Thruster (PDF completo)","Diagrama elétrico de potência","Diagrama de comando de partida"],
                 pdf:{ nome:"AKF_Check-list_Bow_Thruster.pdf", data:FILE_BOWCHECK_PDF_B64 },
                 link:"https://drive.google.com/SUBSTITUA_AKF_BOW_THRUSTER" },
@@ -493,7 +517,7 @@ const CONFIG = {
                 sintomas:[
                   "Driver não libera a partida do azimutal",
                   "Relé K22.1 (Start Allowense) não acionado no painel da TCU",
-                  "Condições de partida não liberadas"
+                  "Condições de partida não liberadas (freio acionado, bomba hidráulica sem pressão e bomba de óleo lub. sem pressão)"
                 ],
                 causas:[
                   "Freio acionado (Brake engaged) — falta de ar no sistema ou válvula manual fechada na praça de carga",
@@ -509,7 +533,17 @@ const CONFIG = {
                   "Chave de fenda / chave allen",
                   "EPI completo"
                 ],
-                procedimento:"1) No painel da TCU, verificar o relé K22.1 (Start Allowense). Teste com jump em X4-82 e X4-83 — não manter o jump em operação, pois sobrepõe todos os requisitos de partida. 2) Verificar as 3 condições de partida: freio solto, pressão na bomba hidráulica e pressão na bomba de óleo lubrificante. 3) Freio: acionar \u201cBrake ON/OFF\u201d pela TCU/ECR/Console; se não desacionar, checar ar no sistema e válvula manual; verificar pressostato 654 (X5-43/X5-44) e relé K24.1 (solenoide Y601). 4) Steering: ligar via \u201cSteering Pump ON/OFF\u201d; conferir relés K24.6 e K27.1; verificar K27.2 e, se necessário, jump em X2-71/X2-72 para isolar o pressostato 273.11 (solenoides Y201A/Y201B para acionamento manual). 5) Lub. Oil: ligar via \u201cLub.Oil Pump ON/OFF\u201d; conferir relé K27.5 e K27.6; jump em X5-31/X5-32 para isolar o pressostato 460.01. 6) Persistindo a falha, acionar o Suporte Técnico da empresa.",
+                procedimento:[
+                  "No painel da TCU, verificar o relé K22.1 (Start Allowense). Teste com jump em X4-82 e X4-83 — não manter o jump em operação, pois sobrepõe todos os requisitos de partida.",
+                  "Verificar as 3 condições de partida: freio solto, pressão na bomba hidráulica e pressão na bomba de óleo lubrificante.",
+                  "FREIO: acionar \u201cBrake ON/OFF\u201d pela TCU, ECR ou Console de vante/ré. Se não desacionar, checar se há ar no sistema e se a válvula manual da praça de carga está aberta.",
+                  "FREIO: verificar continuidade do pressostato 654 nos pontos X5-43 e X5-44 (fechado com freio solto, aberto com freio acionado). Conferir o relé K24.1 (Engage Brake) e, se necessário, acionar manualmente pelo solenoide Y601.",
+                  "STEERING: ligar a bomba via \u201cSteering Pump ON/OFF\u201d. Conferir se o painel da bomba está ligado e a chave em acionamento remoto. Verificar os relés K24.6 (Enable Steering) e K27.1 (Steering Pump ON/OFF).",
+                  "STEERING: verificar o relé K27.2 (Steering Pressure Available). Se não acionado, testar jump em X2-71 e X2-72 para isolar o pressostato 273.11. Solenoides Y201A (horário) e Y201B (anti-horário) permitem acionamento manual da bomba.",
+                  "LUB. OIL: ligar a bomba via \u201cLub.Oil Pump ON/OFF\u201d. Conferir o painel da bomba e o relé K27.5 (Lub.Oil Pump ON/OFF).",
+                  "LUB. OIL: verificar o relé K27.6 (Lub.Oil Pressure Available). Se não acionado, testar jump em X5-31 e X5-32 para isolar o pressostato 460.01.",
+                  "Persistindo a falha após todos os passos, acionar o Suporte Técnico da empresa."
+                ],
                 arquivos:["Check-list completo (PDF)","Diagramas elétricos de partida","Esquemas dos pressostatos 654 / 273.11 / 460.01"],
                 pdf:{ nome:"Troubleshoot_JAG_No_Start_Allowense.pdf", data:FILE_JAG_AZIMUTH_PDF },
                 link:"https://drive.google.com/SUBSTITUA_JAG_AZIMUTH" },
@@ -533,7 +567,16 @@ const CONFIG = {
                   "Teclado e mouse",
                   "Credenciais de acesso do supervisório"
                 ],
-                procedimento:"1) Reiniciar o computador pelo Windows (\u201crestart\u201d); se a tela estiver travada, usar o botão de power. Caso esteja na tela do supervisório, no \u201cMain Menu\u201d selecionar \u201cMAIN ENGINES\u201d, informar a senha de acesso e clicar em \u201cExit Runtime\u201d para liberar o Windows. 2) Verificar o cabo de rede do computador — retirar e recolocar. 3) Abrir o programa \u201cSIMATIC WinCC\u201d. 4) Menu \u201cfile\u201d \u2192 \u201copen\u201d. 5) Navegar até o HD D$ (\\AMCS-BACKUP) (Y:) \u2192 Siemens \u2192 AN0215B \u2192 AN0215B.mcp. 6) Com o projeto carregado, clicar em \u201cplay\u201d na parte superior para iniciar o runtime do supervisório. 7) Informar o login e a senha do supervisório quando solicitado. Consulte o PDF anexo para as credenciais e as imagens de referência de cada etapa.",
+                procedimento:[
+                  "Reiniciar o computador pelo Windows (opção \u201crestart\u201d). Se a tela estiver travada, desligar pelo botão de power.",
+                  "Se estiver na tela do supervisório: no \u201cMain Menu\u201d selecionar \u201cMAIN ENGINES\u201d (em amarelo), informar a senha de acesso e clicar em \u201cExit Runtime\u201d para liberar o Windows. Credenciais no PDF anexo.",
+                  "Verificar o cabo de rede do computador — retirar e recolocar.",
+                  "Abrir o programa \u201cSIMATIC WinCC\u201d.",
+                  "No menu superior, selecionar \u201cfile\u201d e depois \u201copen\u201d.",
+                  "Navegar até o HD D$ (\\\\AMCS-BACKUP) (Y:) \u2192 Siemens \u2192 AN0215B \u2192 AN0215B.mcp.",
+                  "Com o projeto carregado, clicar em \u201cplay\u201d na parte superior para iniciar o runtime do supervisório.",
+                  "Informar o login e a senha do supervisório quando solicitado (ver PDF anexo)."
+                ],
                 arquivos:["Procedimento completo com imagens (PDF)","Telas de referência do WinCC"],
                 pdf:{ nome:"Procedimento_reestabelecer_CLIENT-1_Jaguar.pdf", data:FILE_JAG_CLIENT1_PDF },
                 link:"https://drive.google.com/SUBSTITUA_JAG_SUPERVISORIO" },
@@ -969,7 +1012,9 @@ function renderTSFault(params){
 
       <div class="fd-block">
         <h4>Procedimento Resumido</h4>
-        <p>${escapeHtml(d.procedimento)}</p>
+        ${Array.isArray(d.procedimento)
+          ? `<ol class="proc-list">${d.procedimento.map(p=>`<li>${escapeHtml(p)}</li>`).join('')}</ol>`
+          : `<p>${escapeHtml(d.procedimento)}</p>`}
       </div>
 
       <div class="fd-block">
@@ -977,8 +1022,7 @@ function renderTSFault(params){
         <div>${d.arquivos.map(f=>`<span class="tag-chip">📄 ${escapeHtml(f)}</span>`).join('')}</div>
       </div>
 
-      <a class="btn-primary" href="${d.link}" target="_blank" rel="noopener">📂 Abrir Documentação Completa</a>
-      ${d.pdf ? `<button class="btn-primary" id="btnDownloadPdf" style="background:var(--navy);margin-left:10px;">⬇ Baixar Check-list (PDF)</button>` : ''}
+      ${d.pdf ? `<button class="btn-primary" id="btnDownloadPdf">⬇ Baixar Check-list (PDF)</button>` : ''}
     </div>
   `;
 }
