@@ -308,6 +308,10 @@ button{font-family:inherit;}
 .fd-block p, .fd-block li{font-size:13.5px;color:#334155;line-height:1.65;}
 .fd-block ul{margin:0;padding-left:18px;}
 .proc-list{margin:0;padding:0;list-style:none;counter-reset:proc;}
+.doc-nome{display:block;margin-top:8px;font-size:12px;color:var(--text-muted);font-weight:500;}
+.fd-actions{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;margin-top:8px;}
+.fd-action{display:flex;flex-direction:column;align-items:flex-start;}
+.fd-action .btn-primary{margin-top:0;}
 .proc-list li{
   counter-increment:proc;position:relative;padding:12px 14px 12px 46px;margin-bottom:8px;
   background:var(--gray);border-radius:var(--radius-sm);border-left:3px solid var(--blue);
@@ -437,16 +441,45 @@ const CONFIG = {
     { nome:"TEC1706 — Verificação de Scalling DP", icon:"🛰", desc:"Relatório de verificação de scalling do sistema DP.", arquivo:"TEC1706_Relatorio_Verificacao_Scalling_DP.xlsx", mime:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", data:FILE_TEC1706 },
   ],
 
-  /*   /* ---------------- biblioteca.json ---------------- */
+  /* ---------------- biblioteca.json ----------------
+     Estrutura: Fabricante → Embarcação/Projeto → Documentos
+     Cada documento aponta para um link externo (SharePoint / Drive / OneDrive).
+     Para adicionar, copie um bloco { ... } e troque nome, desc e link.
+  ------------------------------------------------------------------- */
   biblioteca: [
-    { nome:"Raytheon Anschütz", sigla:"RA", link:"https://drive.google.com/SUBSTITUA_RAYTHEON" },
-    { nome:"Kongsberg",         sigla:"KG", link:"https://drive.google.com/SUBSTITUA_KONGSBERG" },
-    { nome:"Furuno",            sigla:"FU", link:"https://drive.google.com/SUBSTITUA_FURUNO" },
-    { nome:"Sperry Marine",     sigla:"SM", link:"https://drive.google.com/SUBSTITUA_SPERRY" },
-    { nome:"Schneider Electric",sigla:"SE", link:"https://drive.google.com/SUBSTITUA_SCHNEIDER" },
-    { nome:"Phoenix Contact",   sigla:"PC", link:"https://drive.google.com/SUBSTITUA_PHOENIX" },
-    { nome:"WEG",               sigla:"WE", link:"https://drive.google.com/SUBSTITUA_WEG" },
-    { nome:"Siemens",           sigla:"SI", link:"https://drive.google.com/SUBSTITUA_SIEMENS" },
+    { id:"cougar", nome:"Posidonia Cougar (H1008)", tipo:"PSV",
+      fabricantes:[
+        { nome:"Keppel Singmarine", sigla:"KS",
+          documentos:[
+            { nome:"Hot Water Calorifier", icon:"🔥", desc:"KepSing Brazil H1008 MP300-18DV Manual.pdf", link:"https://posidoniashipping.sharepoint.com/:b:/s/eletrica.offshore/IQDKkYO483KVT6F4Gg1Lz0NxAQQ1P9l4gBwcDixGAnIxYoA?e=OhO9MV" },
+            { nome:"Sistema ETE", icon:"♻️", desc:"KepSing Brazil H1008 DVZ SKA 30 Plus Manual.pdf", link:"https://posidoniashipping.sharepoint.com/:b:/s/eletrica.offshore/IQBBPjH0ekgqRac1EJJ4PA03Aco7Mk767JhdaTHZhuWK3c8?e=dXSKyG" },
+          ]},
+        { nome:"Heinen & Hopman", sigla:"HH",
+          documentos:[
+            { nome:"Painel do Ar-central", icon:"❄️", desc:"12013257-500_C.pdf", link:"https://posidoniashipping.sharepoint.com/:b:/s/eletrica.offshore/IQBDVXK4MA43QI4a6f5jhlxAASdeJUsnGwrnvBlKrcoNuTo?e=XiCpAM" },
+            { nome:"Painel da Frigorífica", icon:"🧊", desc:"12013257-501_B.pdf", link:"https://posidoniashipping.sharepoint.com/:b:/s/eletrica.offshore/IQBXhs0pgPdjQbvnkjAF5H0KAQ92TIAb0zk0dlDLy4falFU?e=EULR3j" },
+            { nome:"Painel de Ventilação 440V CCM", icon:"🌬", desc:"12013257-502.pdf", link:"https://posidoniashipping.sharepoint.com/:b:/s/eletrica.offshore/IQD3efA9AxRbSbeJkPMOjS0AAUBKca1FOo3cCHzFqbr9SM0?e=G82zJ1" },
+            { nome:"Painel de Ventilação 230V CCM", icon:"🌬", desc:"12013257-503_A.pdf", link:"https://posidoniashipping.sharepoint.com/:b:/s/eletrica.offshore/IQAj-bDqApKnRK9hR1zDUzYvAev_E7qQVdkI671tQ3EbUps?e=G3T5Vg" },
+            { nome:"Painel das Ventilações da PM Start/Stop CCM", icon:"⚙️", desc:"12013257-504.pdf", link:"https://posidoniashipping.sharepoint.com/:b:/s/eletrica.offshore/IQBgfNckJy04RaDf50eI8qOVAe9h-u_spNwjgQNX8Ad0_us?e=beyblF" },
+            { nome:"Painel das Temperaturas das Câmara Fraca e Forte", icon:"🌡", desc:"12013257-505.pdf", link:"https://posidoniashipping.sharepoint.com/:b:/s/eletrica.offshore/IQA7Lyy3uubHT7LI7NDyl6tbAeG-KdWY4YFMQzoXoR4WV8Q?e=rylVep" },
+          ]},
+      ]},
+  ],
+
+  /* ---------------- sondagem.json ----------------
+     Estrutura: Embarcação → Sistemas de sondagem (link externo).
+     Para adicionar, copie um bloco { ... } dentro de "sistemas".
+  ------------------------------------------------------------------- */
+  sondagem: [
+    { id:"atlantic-kingfisher", nome:"Atlantic Kingfisher", tipo:"AHTS", sistemas:[] },
+    { id:"mestre-dos-mares", nome:"Mestre dos Mares", tipo:"PSV", sistemas:[] },
+    { id:"cougar", nome:"Posidonia Cougar", tipo:"PSV", sistemas:[
+      { nome:"Sistema de Sondagem Remota - Cougar", icon:"📡", desc:"Documentação do sistema de sondagem remota.", link:"" },
+    ]},
+    { id:"jaguar", nome:"Posidonia Jaguar", tipo:"PSV", sistemas:[] },
+    { id:"leopard", nome:"Posidonia Leopard", tipo:"PSV", sistemas:[] },
+    { id:"lion", nome:"Posidonia Lion", tipo:"PSV", sistemas:[] },
+    { id:"panther", nome:"Posidonia Panther", tipo:"PSV", sistemas:[] },
   ],
 
   /* ---------------- troubleshooting.json ---------------- */
@@ -495,7 +528,7 @@ const CONFIG = {
                 ],
                 arquivos:["Check-list Bow Thruster (PDF completo)","Diagrama elétrico de potência","Diagrama de comando de partida"],
                 pdf:{ nome:"AKF_Check-list_Bow_Thruster.pdf", data:FILE_BOWCHECK_PDF_B64 },
-                link:"https://drive.google.com/SUBSTITUA_AKF_BOW_THRUSTER" },
+                link:"" },
             ]},
         ]
       },
@@ -546,7 +579,8 @@ const CONFIG = {
                 ],
                 arquivos:["Check-list completo (PDF)","Diagramas elétricos de partida","Esquemas dos pressostatos 654 / 273.11 / 460.01"],
                 pdf:{ nome:"Troubleshoot_JAG_No_Start_Allowense.pdf", data:FILE_JAG_AZIMUTH_PDF },
-                link:"https://drive.google.com/SUBSTITUA_JAG_AZIMUTH" },
+                linkNome:"Instruction Set Propulsion Controls",
+                link:"https://posidoniashipping-my.sharepoint.com/:b:/p/psh/IQBIluoKYptxQZAnyuC4W9USATq9PVrzKT7oONKAzRigFUg?e=l1gDB1" },
             ]},
           { id:"supervisorio", nome:"Supervisório", icon:"🖥", img:"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB4PSIzMiIgeT0iNjQiIHdpZHRoPSI0NDgiIGhlaWdodD0iMzA0IiByeD0iMjQiIGZpbGw9IiM5QkQzRjciLz48cmVjdCB4PSIzMiIgeT0iNjQiIHdpZHRoPSIyMjQiIGhlaWdodD0iMzA0IiBmaWxsPSIjOUJEM0Y3Ii8+PHJlY3QgeD0iMjU2IiB5PSI2NCIgd2lkdGg9IjIyNCIgaGVpZ2h0PSIzMDQiIHJ4PSIwIiBmaWxsPSIjNzdCOUVDIi8+PHJlY3QgeD0iNzIiIHk9IjEwNCIgd2lkdGg9IjM2OCIgaGVpZ2h0PSIyMjQiIHJ4PSIxMCIgZmlsbD0iIzBCM0M3QSIvPjxyZWN0IHg9IjEwNCIgeT0iMTQwIiB3aWR0aD0iMTMwIiBoZWlnaHQ9IjE0IiByeD0iNyIgZmlsbD0iIzAwNzFGMiIvPjxyZWN0IHg9IjEwNCIgeT0iMTcyIiB3aWR0aD0iMTgwIiBoZWlnaHQ9IjEwIiByeD0iNSIgZmlsbD0iIzVGQThFOCIvPjxyZWN0IHg9IjEwNCIgeT0iMTk4IiB3aWR0aD0iMTUwIiBoZWlnaHQ9IjEwIiByeD0iNSIgZmlsbD0iIzVGQThFOCIvPjxwYXRoIGQ9Ik0xMDQgMjkyIEwxNTIgMjQ0IEwxOTYgMjc2IEwyNDYgMjA4IEwyOTYgMjYyIEwzNTIgMTkwIEw0MDggMjQ2IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDcxRjIiIHN0cm9rZS13aWR0aD0iMTIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxyZWN0IHg9IjIxNiIgeT0iMzY4IiB3aWR0aD0iODAiIGhlaWdodD0iNTIiIGZpbGw9IiM3N0I5RUMiLz48cmVjdCB4PSIxNTIiIHk9IjQxNiIgd2lkdGg9IjIwOCIgaGVpZ2h0PSIzMiIgcng9IjE2IiBmaWxsPSIjMEIzQzdBIi8+PC9zdmc+", categoria:"Automação",
             defeitos:[
@@ -579,7 +613,7 @@ const CONFIG = {
                 ],
                 arquivos:["Procedimento completo com imagens (PDF)","Telas de referência do WinCC"],
                 pdf:{ nome:"Procedimento_reestabelecer_CLIENT-1_Jaguar.pdf", data:FILE_JAG_CLIENT1_PDF },
-                link:"https://drive.google.com/SUBSTITUA_JAG_SUPERVISORIO" },
+                link:"" },
             ]},
         ]
       },
@@ -615,6 +649,7 @@ const NAV_ITEMS = [
   { id:"treinamentos", label:"Treinamentos", icon:ICONS.train },
   { id:"relatorios", label:"Relatórios", icon:ICONS.reports },
   { id:"troubleshooting", label:"Troubleshooting", icon:ICONS.trouble },
+  { id:"sondagem", label:"Sondagem", icon:"📡" },
   { id:"biblioteca", label:"Biblioteca Técnica", icon:ICONS.lib },
   { id:"config", label:"Configurações", icon:ICONS.settings },
 ];
@@ -684,7 +719,8 @@ function renderHome(){
     {ic:ICONS.train, title:"Treinamentos Internos", desc:"Biblioteca de treinamentos técnicos: vídeos, manuais e apresentações.", route:"treinamentos"},
     {ic:ICONS.reports, title:"Relatórios", desc:"Formulários e relatórios de manutenção integrados ao Smartsheet.", route:"relatorios"},
     {ic:ICONS.trouble, title:"Troubleshooting", desc:"Base de conhecimento técnica por embarcação, equipamento e defeito.", route:"troubleshooting"},
-    {ic:ICONS.lib, title:"Biblioteca Técnica", desc:"Manuais, datasheets e catálogos organizados por fabricante.", route:"biblioteca"},
+    {ic:"📡", title:"Sondagem", desc:"Documentação dos sistemas de sondagem por embarcação.", route:"sondagem"},
+    {ic:ICONS.lib, title:"Biblioteca Técnica", desc:"Manuais e diagramas organizados por embarcação e fabricante.", route:"biblioteca"},
   ];
 
   return `
@@ -897,16 +933,109 @@ function bindRelatorios(){
 function renderBiblioteca(){
   return `
     ${crumbHTML([{label:"Início",route:"home"},{label:"Biblioteca Técnica"}])}
-    ${pageHeader("REFERÊNCIA", "Biblioteca Técnica", "Manuais, datasheets, catálogos, softwares e firmwares por fabricante.")}
-    <div class="mfr-grid">
-      ${CONFIG.biblioteca.map(b=>`
-        <div class="mfr-card" onclick="window.open('${b.link}','_blank')">
-          <div class="mfr-logo">${b.sigla}</div>
-          <h4>${escapeHtml(b.nome)}</h4>
-          <span>Abrir pasta →</span>
+    ${pageHeader("REFERÊNCIA", "Biblioteca Técnica", "Selecione a embarcação para acessar a documentação por fabricante.")}
+    <div class="vessel-grid">
+      ${CONFIG.biblioteca.map((v,i)=>`
+        <div class="vessel-card" data-bibv="${i}">
+          ${v.tipo?`<span class="vessel-tag">${escapeHtml(v.tipo)}</span>`:''}
+          <h3>${escapeHtml(v.nome)}</h3>
         </div>`).join('')}
     </div>
   `;
+}
+
+function renderBibEmbarcacao(params){
+  const v = CONFIG.biblioteca[params.vIdx];
+  if(!v) return renderBiblioteca();
+  return `
+    ${crumbHTML([{label:"Início",route:"home"},{label:"Biblioteca Técnica",route:"biblioteca"},{label:v.nome}])}
+    ${pageHeader("EMBARCAÇÃO" + (v.tipo?" · "+v.tipo:""), v.nome, "Selecione o fabricante para visualizar a documentação disponível.")}
+    <div class="mfr-grid">
+      ${v.fabricantes.map((f,j)=>`
+        <div class="mfr-card" data-bibm="${j}">
+          <div class="mfr-logo">${escapeHtml(f.sigla)}</div>
+          <h4>${escapeHtml(f.nome)}</h4>
+          <span>${f.documentos.length} documento(s) →</span>
+        </div>`).join('')}
+    </div>
+  `;
+}
+
+function renderBibFabricante(params){
+  const v = CONFIG.biblioteca[params.vIdx];
+  if(!v) return renderBiblioteca();
+  const f = v.fabricantes[params.mIdx];
+  if(!f) return renderBibEmbarcacao(params);
+  return `
+    ${crumbHTML([
+      {label:"Início",route:"home"},
+      {label:"Biblioteca Técnica",route:"biblioteca"},
+      {label:v.nome,route:"bib-embarcacao",params:{vIdx:params.vIdx}},
+      {label:f.nome}
+    ])}
+    ${pageHeader(v.nome.toUpperCase(), f.nome, "Manuais, diagramas e documentação técnica.")}
+    <div class="report-grid">
+      ${f.documentos.map(d=>`
+        <div class="card" onclick="window.open('${d.link}','_blank','noopener')">
+          <div class="ic-wrap">${d.icon||'📄'}</div>
+          <h3>${escapeHtml(d.nome)}</h3>
+          <p>${escapeHtml(d.desc||'')}</p>
+          <span class="btn-open">Abrir Manual →</span>
+        </div>`).join('')}
+    </div>
+  `;
+}
+
+function bindBiblioteca(){
+  document.querySelectorAll('.vessel-card[data-bibv]').forEach(el=>{
+    el.addEventListener('click', ()=> navigate('bib-embarcacao', {vIdx:Number(el.dataset.bibv)}));
+  });
+  document.querySelectorAll('.mfr-card[data-bibm]').forEach(el=>{
+    el.addEventListener('click', ()=> navigate('bib-fabricante', {vIdx:state.params.vIdx, mIdx:Number(el.dataset.bibm)}));
+  });
+}
+
+/* =====================================================================================================
+   PÁGINA: SONDAGEM
+===================================================================================================== */
+function renderSondagem(){
+  return `
+    ${crumbHTML([{label:"Início",route:"home"},{label:"Sondagem"}])}
+    ${pageHeader("SISTEMAS", "Sondagem", "Selecione a embarcação para acessar a documentação dos sistemas de sondagem.")}
+    <div class="vessel-grid">
+      ${CONFIG.sondagem.map((v,i)=>`
+        <div class="vessel-card" data-sonv="${i}">
+          <span class="vessel-tag">${escapeHtml(v.tipo)}</span>
+          <h3>${escapeHtml(v.nome)}</h3>
+        </div>`).join('')}
+    </div>
+  `;
+}
+
+function renderSondagemEmbarcacao(params){
+  const v = CONFIG.sondagem[params.vIdx];
+  if(!v) return renderSondagem();
+  return `
+    ${crumbHTML([{label:"Início",route:"home"},{label:"Sondagem",route:"sondagem"},{label:v.nome}])}
+    ${pageHeader("EMBARCAÇÃO · " + v.tipo, v.nome, "Sistemas de sondagem cadastrados.")}
+    ${v.sistemas.length === 0
+      ? `<div class="empty-state"><div class="ic">📡</div><p>Nenhum sistema cadastrado para esta embarcação ainda.</p></div>`
+      : `<div class="report-grid">
+      ${v.sistemas.map(s=>`
+        <div class="card" ${s.link ? `onclick="window.open('${s.link}','_blank','noopener')"` : 'style="cursor:default;opacity:.75"'}>
+          <div class="ic-wrap">${s.icon||'📡'}</div>
+          <h3>${escapeHtml(s.nome)}</h3>
+          <p>${escapeHtml(s.desc||'')}</p>
+          <span class="btn-open">${s.link ? 'Abrir →' : 'Link em breve'}</span>
+        </div>`).join('')}
+    </div>`}
+  `;
+}
+
+function bindSondagem(){
+  document.querySelectorAll('.vessel-card[data-sonv]').forEach(el=>{
+    el.addEventListener('click', ()=> navigate('sondagem-embarcacao', {vIdx:Number(el.dataset.sonv)}));
+  });
 }
 
 /* =====================================================================================================
@@ -1022,7 +1151,16 @@ function renderTSFault(params){
         <div>${d.arquivos.map(f=>`<span class="tag-chip">📄 ${escapeHtml(f)}</span>`).join('')}</div>
       </div>
 
-      ${d.pdf ? `<button class="btn-primary" id="btnDownloadPdf">⬇ Baixar Check-list (PDF)</button>` : ''}
+      <div class="fd-actions">
+        ${d.link ? `<div class="fd-action">
+          <a class="btn-primary" href="${d.link}" target="_blank" rel="noopener">📂 Abrir Documentação Completa</a>
+          ${d.linkNome?`<span class="doc-nome">📄 ${escapeHtml(d.linkNome)}</span>`:''}
+        </div>` : ''}
+        ${d.pdf ? `<div class="fd-action">
+          <button class="btn-primary" id="btnDownloadPdf" style="background:var(--navy);">⬇ Baixar Check-list (PDF)</button>
+          ${d.pdf.nome?`<span class="doc-nome">📄 ${escapeHtml(d.pdf.nome)}</span>`:''}
+        </div>` : ''}
+      </div>
     </div>
   `;
 }
@@ -1139,6 +1277,10 @@ function render(){
     case 'treinamentos': html = renderTreinamentos(); break;
     case 'relatorios': html = renderRelatorios(); break;
     case 'biblioteca': html = renderBiblioteca(); break;
+    case 'bib-embarcacao': html = renderBibEmbarcacao(state.params); break;
+    case 'bib-fabricante': html = renderBibFabricante(state.params); break;
+    case 'sondagem': html = renderSondagem(); break;
+    case 'sondagem-embarcacao': html = renderSondagemEmbarcacao(state.params); break;
     case 'troubleshooting': html = renderTroubleshootingHome(); break;
     case 'ts-vessel': html = renderTSVessel(state.params); break;
     case 'ts-equip': html = renderTSEquip(state.params); break;
@@ -1153,6 +1295,8 @@ function render(){
   if(state.route==='ts-fault') bindTSFault();
   if(state.route==='config') bindConfig();
   if(state.route==='relatorios') bindRelatorios();
+  if(['biblioteca','bib-embarcacao','bib-fabricante'].includes(state.route)) bindBiblioteca();
+  if(state.route==='sondagem') bindSondagem();
 }
 
 /* =====================================================================================================
